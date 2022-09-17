@@ -3,13 +3,13 @@ function raw_hist = get_freq(img)
     raw_hist = zeros(1,256);
     
     % Get img size
-    [ncol,nrow] = size(img);
+    [nrow,ncol] = size(img);
 
     % Increment the frequency for each pixel's value
     % As the indexing starts from 1 to 256, not 0 to 255, 
         % need to add 1 to the index
-    for i = 1 : ncol
-        for j = 1 : nrow
+    for i = 1 : nrow
+        for j = 1 : ncol
             raw_hist(img(i,j) + 1) = raw_hist(img(i,j) + 1) + 1;
         end
     end
