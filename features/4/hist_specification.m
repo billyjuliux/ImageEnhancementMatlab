@@ -2,7 +2,6 @@ function [raw_hist_in, raw_hist_ref, specific_hist, specific_img] = hist_specifi
     % Get image dimension, assume input and reference's dimension is same
     [~, ~, nchannel] = size(img_in);
     
-
     raw_hist_in = get_frequency(img_in);
     raw_hist_ref = get_frequency(img_ref);
 
@@ -24,28 +23,45 @@ function [raw_hist_in, raw_hist_ref, specific_hist, specific_img] = hist_specifi
 
         specific_hist = get_frequency(specific_img);
     end
+
+    figure;
+    imshow(specific_img);
 end
 
 function specific_img = hist_spec_per_channel(img_in, img_ref)
     % Get image dimension
     [nrow, ncol] = size(img_in);
 
-    % Get equalized imgs
-    equalized_img_in = hist_equalization_per_channel(img_in);
-    equalized_img_ref = hist_equalization_per_channel(img_ref);
+    % Equalize img input
+    equalized_hist_in = zeros(1,256);
+    raw_hist = get_frequency(img_in);
+    for i = 1:256
+        sum = 0;
+        for j = 1:i
+            sum = sum + raw_hist(j);
+        end
+        equalized_hist_in(i) = floor(255*sum);
+    end
 
-    % Get equalized hist
-    equalized_hist_in = get_frequency(equalized_img_in);
-    equalized_hist_ref = get_frequency(equalized_img_ref);
+    % Equalize img ref
+    equalized_img_ref = zeros(1,256);
+    raw_hist_ref = get_frequency(img_ref);
+    for i = 1:256
+        sum = 0;
+        for j = 1:i
+            sum = sum + raw_hist_ref(j);
+        end
+        equalized_img_ref(i) = floor(255*sum);
+    end
     
     % Compute specific hist
     specific_hist = zeros(1,256);
     for i = 1:256
-        minval = abs(equalized_hist_in(i) - equalized_hist_ref(1));
+        minval = abs(equalized_hist_in(i) - equalized_img_ref(1));
         minj = 1;
 
         for j = 1:256
-            curr = abs(equalized_hist_in(i) - equalized_hist_ref(j));
+            curr = abs(equalized_hist_in(i) - equalized_img_ref(j));
             if (curr < minval)
                 minval = curr;
                 minj = j;
