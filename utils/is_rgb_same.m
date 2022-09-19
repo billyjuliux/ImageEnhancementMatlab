@@ -1,7 +1,11 @@
 function return_val = is_rgb_same(img)
-    if size(img, 3) == 1
+    % Get image dimension
+    [~, ~, nchannel] = size(img);
+
+    if nchannel == 1
         % Grayscale image
         return_val = true;
+        return
     end
     
     red = img(:,:,1);
