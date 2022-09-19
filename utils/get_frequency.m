@@ -1,4 +1,4 @@
-function raw_hist = get_freq(img)
+function raw_hist = get_frequency(img)
     % Initialize array holding frequency for each grayscale value [0..255]
     raw_hist = zeros(1,256);
     
