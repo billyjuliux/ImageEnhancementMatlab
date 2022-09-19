@@ -1,48 +1,32 @@
 function enhanced_img = img_brightning(img, a, b)
-    enhanced_img = uint8(img_operation(@px_brightning, img, [a b]));
+    enhanced_img = a * img + b;
+    figure, imshow(enhanced_img);
 end
 
 function enhanced_img = img_log_transform(img, c)
-    enhanced_img = uint8(img_operation(@px_log_transform, img, c));
+    enhanced_img = c * log(1 + im2double(img)) * 256;
+    enhanced_img = uint8(enhanced_img);
+    figure, imshow(enhanced_img);
 end
 
 function enhanced_img = img_pow_transform(img, c, y)
-    enhanced_img = img_operation(@px_pow_transform, img, [c, y]);
+    enhanced_img = c * (im2double(img) .^ y) * 256;
+    enhanced_img = uint8(enhanced_img);
+    figure, imshow(enhanced_img);
 end
+    
+function enhanced_img = img_contrast_stretching(img)
+    figure, imshow(img);
 
-function enhanced_img = img_operation(op, img, args)
-    [nrow, ncol, channel] = size(img);
+    hist = get_frequency(img);
+    figure, bar(hist);
 
-    enhanced_img = zeros(nrow, ncol, channel);
+    rmin = min(img(:));
+    rmax = max(img(:));
 
-    for i = 1 : nrow
-        for j = 1 : ncol 
-            for k = 1 : channel 
-                enhanced_img(i, j, k) = op(img(i, j, k), args);
-            end
-        end
-    end
-end
+    enhanced_img =  (img - rmin).*(255/(rmax - rmin));
+    figure, imshow(enhanced_img);
 
-function enhanced_px = px_brightning(r, args)
-    a = args(1);
-    b = args(2);
-    enhanced_px = a * r + b;
-
-    if enhanced_px > 255
-        enhanced_px = 255;
-    elseif enhanced_px < 0
-        enhanced_px = 0;
-    end
-end
-
-function enhanced_px = px_log_transform(r, args)
-    c = args(1);
-    enhanced_px = c * log(double(1 + r));
-end
-
-function enhanced_px = px_pow_transform(r, args)
-    c = args(1);
-    y = args(2);
-    enhanced_px = c * (r ^ y);
+    enhanced_hist = get_frequency(enhanced_img);
+    figure, bar(enhanced_hist);
 end
