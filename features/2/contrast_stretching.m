@@ -1,13 +1,17 @@
 function [raw_hist, enhanced_hist, enhanced_img] = contrast_stretching(img)
     raw_hist = get_frequency(img);
 
-     if (is_rgb_same(img))
+    if (is_rgb_same(img))
         % ------------- Grayscale --------------
         enhanced_img = contrast_stretching_per_channel(img(:,:,1));
         enhanced_img = cat(3, enhanced_img, enhanced_img, enhanced_img);
     else
         % ------------- RGB --------------
         enhanced_imgs = cell(3,1);
+
+        % Get image dimension
+        [~, ~, nchannel] = size(img);
+
         for i = 1:nchannel
             enhanced = contrast_stretching_per_channel(img(:,:,i));
             enhanced_imgs{i} = enhanced;
@@ -30,7 +34,7 @@ function enhanced_img = contrast_stretching_per_channel(img)
     K = 255/(rmax - rmin);
 
     % Initialize output
-    enhanced_img = zeros(img);
+    enhanced_img = zeros(nrow, ncol);
 
     % Calculate image stretching
     for i = 1:nrow
