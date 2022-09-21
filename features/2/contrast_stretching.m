@@ -39,15 +39,9 @@ function enhanced_img = contrast_stretching_per_channel(img)
     % Calculate image stretching
     for i = 1:nrow
         for j = 1:ncol
-            if img(i, j) <= rmin
-                enhanced_img(i, j) = 0;
-            elseif img(i, j) >= rmax
-                enhanced_img(i, j) = 255;
-            else
-                enhanced_img(i, j) = K * (img(i, j) - rmin);
-            end
+            enhanced_img(i, j) = K * (img(i, j) - rmin);
         end
     end
-
+    
     enhanced_img = cast(enhanced_img, 'uint8');
 end
