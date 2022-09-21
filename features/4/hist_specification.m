@@ -24,8 +24,6 @@ function [raw_hist_in, raw_hist_ref, specific_hist, specific_img] = hist_specifi
         specific_hist = get_frequency(specific_img);
     end
 
-    figure;
-    imshow(specific_img);
 end
 
 function specific_img = hist_spec_per_channel(img_in, img_ref)
